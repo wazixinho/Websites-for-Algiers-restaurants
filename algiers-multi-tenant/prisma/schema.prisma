@@ -1,0 +1,38 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Restaurant {
+  id              String      @id
+  name            String
+  cuisine         String      // Stored as JSON string
+  address         String
+  phone           String
+  hours           String      // Stored as JSON string
+  socialLinks     String      // Stored as JSON string
+  branding        String      // Stored as JSON string
+  menuCategories  MenuCategory[]
+}
+
+model MenuCategory {
+  id           String      @id @default(cuid())
+  restaurantId String
+  name         String
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  items        MenuItem[]
+}
+
+model MenuItem {
+  id             String       @id @default(cuid())
+  categoryId     String
+  name           String
+  description    String
+  price          String
+  category       MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
